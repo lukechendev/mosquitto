@@ -15,6 +15,10 @@ Checkout the feature branches:
 https://github.com/lukechendev/mosquitto/tree/feature/build_qnx_7.0_with_cjson
 https://github.com/lukechendev/mosquitto/tree/feature/build_qnx_7.0
 
+Download QNX binaries:
+
+https://github.com/lukechendev/mosquitto-qnx/blob/master/mosquitto.zip
+
 
 ## Links
 
