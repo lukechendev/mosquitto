@@ -10,6 +10,11 @@ subscribing.
 
 Made mosquitto to build and run in QNX 7.0/7.1
 
+Checkout the feature branches:
+
+https://github.com/lukechendev/mosquitto/tree/feature/build_qnx_7.0_with_cjson
+https://github.com/lukechendev/mosquitto/tree/feature/build_qnx_7.0
+
 
 ## Links
 
