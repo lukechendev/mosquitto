@@ -115,7 +115,7 @@ WITH_COVERAGE:=no
 WITH_UNIX_SOCKETS:=yes
 
 # Build mosquitto_sub with cJSON support
-WITH_CJSON:=yes
+WITH_CJSON:=no
 
 # Build mosquitto with support for the $CONTROL topics.
 WITH_CONTROL:=yes
@@ -165,31 +165,31 @@ endif
 
 STATIC_LIB_DEPS:=
 
-APP_CPPFLAGS=$(CPPFLAGS) -I. -I../../ -I../../include -I../../src -I../../lib -I../../cjson
+APP_CPPFLAGS=$(CPPFLAGS) -I. -I../../ -I../../include -I../../src -I../../lib
 APP_CFLAGS=$(CFLAGS) -DVERSION=\""${VERSION}\""
-APP_LDFLAGS:=$(LDFLAGS) -L../../lib
+APP_LDFLAGS:=$(LDFLAGS)
 
-LIB_CPPFLAGS=$(CPPFLAGS) -I. -I.. -I../include -I../../include -I../../cjson
+LIB_CPPFLAGS=$(CPPFLAGS) -I. -I.. -I../include -I../../include
 LIB_CFLAGS:=$(CFLAGS)
 LIB_CXXFLAGS:=$(CXXFLAGS)
-LIB_LDFLAGS:=$(LDFLAGS) -L../../lib
+LIB_LDFLAGS:=$(LDFLAGS)
 LIB_LIBADD:=$(LIBADD)
 
 BROKER_CPPFLAGS:=$(LIB_CPPFLAGS) -I../lib
 BROKER_CFLAGS:=${CFLAGS} -DVERSION="\"${VERSION}\"" -DWITH_BROKER
-BROKER_LDFLAGS:=${LDFLAGS} -L../../lib
+BROKER_LDFLAGS:=${LDFLAGS}
 BROKER_LDADD:=
 
-CLIENT_CPPFLAGS:=$(CPPFLAGS) -I.. -I../include -I../../cjson
+CLIENT_CPPFLAGS:=$(CPPFLAGS) -I.. -I../include
 CLIENT_CFLAGS:=${CFLAGS} -DVERSION="\"${VERSION}\""
-CLIENT_LDFLAGS:=$(LDFLAGS) -L../lib -L../../lib
+CLIENT_LDFLAGS:=$(LDFLAGS) -L../lib
 CLIENT_LDADD:=
 
 PASSWD_LDADD:=
 
-PLUGIN_CPPFLAGS:=$(CPPFLAGS) -I../.. -I../../include -I../../cjson
+PLUGIN_CPPFLAGS:=$(CPPFLAGS) -I../.. -I../../include
 PLUGIN_CFLAGS:=$(CFLAGS) -fPIC
-PLUGIN_LDFLAGS:=$(LDFLAGS) -L../../lib
+PLUGIN_LDFLAGS:=$(LDFLAGS)
 
 ifneq ($(or $(findstring $(UNAME),FreeBSD), $(findstring $(UNAME),OpenBSD), $(findstring $(UNAME),NetBSD)),)
 	BROKER_LDADD:=$(BROKER_LDADD) -lm
