@@ -14,6 +14,9 @@
 # make WITH_TLS=no
 # =============================================================================
 
+UNAME:=QNX
+ARCH:=aarch64le
+
 # Uncomment to compile the broker with tcpd/libwrap support.
 #WITH_WRAP:=yes
 
@@ -73,7 +76,11 @@ WITH_WEBSOCKETS:=no
 WITH_EC:=yes
 
 # Build man page documentation by default.
-WITH_DOCS:=yes
+ifeq ($(UNAME),QNX)
+	WITH_DOCS:=no
+else
+	WITH_DOCS:=yes
+endif
 
 # Build with client support for SOCK5 proxy.
 WITH_SOCKS:=yes
@@ -124,6 +131,12 @@ WITH_XTREPORT=no
 # End of user configuration
 # =============================================================================
 
+# Compiler configuration
+ifeq ($(UNAME),QNX)
+	--host=$(QNX_HOST)
+	CC=aarch64-unknown-nto-qnx7.0.0-gcc
+	CXX=aarch64-unknown-nto-qnx7.0.0-g++
+endif
 
 # Also bump lib/mosquitto.h, CMakeLists.txt,
 # installer/mosquitto.nsi, installer/mosquitto64.nsi
@@ -139,8 +152,6 @@ DB_HTML_XSL=man/html.xsl
 
 #MANCOUNTRIES=en_GB
 
-UNAME:=$(shell uname -s)
-ARCH:=$(shell uname -p)
 
 ifeq ($(UNAME),SunOS)
 	ifeq ($(CC),cc)
@@ -154,38 +165,38 @@ endif
 
 STATIC_LIB_DEPS:=
 
-APP_CPPFLAGS=$(CPPFLAGS) -I. -I../../ -I../../include -I../../src -I../../lib
+APP_CPPFLAGS=$(CPPFLAGS) -I. -I../../ -I../../include -I../../src -I../../lib -I../../cjson
 APP_CFLAGS=$(CFLAGS) -DVERSION=\""${VERSION}\""
-APP_LDFLAGS:=$(LDFLAGS)
+APP_LDFLAGS:=$(LDFLAGS) -L../../lib
 
-LIB_CPPFLAGS=$(CPPFLAGS) -I. -I.. -I../include -I../../include
+LIB_CPPFLAGS=$(CPPFLAGS) -I. -I.. -I../include -I../../include -I../../cjson
 LIB_CFLAGS:=$(CFLAGS)
 LIB_CXXFLAGS:=$(CXXFLAGS)
-LIB_LDFLAGS:=$(LDFLAGS)
+LIB_LDFLAGS:=$(LDFLAGS) -L../../lib
 LIB_LIBADD:=$(LIBADD)
 
 BROKER_CPPFLAGS:=$(LIB_CPPFLAGS) -I../lib
 BROKER_CFLAGS:=${CFLAGS} -DVERSION="\"${VERSION}\"" -DWITH_BROKER
-BROKER_LDFLAGS:=${LDFLAGS}
+BROKER_LDFLAGS:=${LDFLAGS} -L../../lib
 BROKER_LDADD:=
 
-CLIENT_CPPFLAGS:=$(CPPFLAGS) -I.. -I../include
+CLIENT_CPPFLAGS:=$(CPPFLAGS) -I.. -I../include -I../../cjson
 CLIENT_CFLAGS:=${CFLAGS} -DVERSION="\"${VERSION}\""
-CLIENT_LDFLAGS:=$(LDFLAGS) -L../lib
+CLIENT_LDFLAGS:=$(LDFLAGS) -L../lib -L../../lib
 CLIENT_LDADD:=
 
 PASSWD_LDADD:=
 
-PLUGIN_CPPFLAGS:=$(CPPFLAGS) -I../.. -I../../include
+PLUGIN_CPPFLAGS:=$(CPPFLAGS) -I../.. -I../../include -I../../cjson
 PLUGIN_CFLAGS:=$(CFLAGS) -fPIC
-PLUGIN_LDFLAGS:=$(LDFLAGS)
+PLUGIN_LDFLAGS:=$(LDFLAGS) -L../../lib
 
 ifneq ($(or $(findstring $(UNAME),FreeBSD), $(findstring $(UNAME),OpenBSD), $(findstring $(UNAME),NetBSD)),)
 	BROKER_LDADD:=$(BROKER_LDADD) -lm
 	BROKER_LDFLAGS:=$(BROKER_LDFLAGS) -Wl,--dynamic-list=linker.syms
 	SEDINPLACE:=-i ""
 else
-	BROKER_LDADD:=$(BROKER_LDADD) -ldl -lm
+	BROKER_LDADD:=$(BROKER_LDADD) -lm
 	SEDINPLACE:=-i
 endif
 
@@ -254,10 +265,10 @@ ifeq ($(WITH_TLS),yes)
 endif
 
 ifeq ($(WITH_THREADING),yes)
-	LIB_LIBADD:=$(LIB_LIBADD) -lpthread
+	LIB_LIBADD:=$(LIB_LIBADD)
 	LIB_CPPFLAGS:=$(LIB_CPPFLAGS) -DWITH_THREADING
 	CLIENT_CPPFLAGS:=$(CLIENT_CPPFLAGS) -DWITH_THREADING
-	STATIC_LIB_DEPS:=$(STATIC_LIB_DEPS) -lpthread
+	STATIC_LIB_DEPS:=$(STATIC_LIB_DEPS)
 endif
 
 ifeq ($(WITH_SOCKS),yes)
