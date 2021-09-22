@@ -6,6 +6,11 @@ and 3.1 of the MQTT protocol. It also includes a C and C++ client library, and
 the `mosquitto_pub` and `mosquitto_sub` utilities for publishing and
 subscribing.
 
+## Additional Changes
+
+Made mosquitto to build and run in QNX 7.0/7.1
+
+
 ## Links
 
 See the following links for more information on MQTT:
