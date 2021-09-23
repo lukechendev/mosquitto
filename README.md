@@ -19,6 +19,12 @@ Download QNX binaries:
 
 https://github.com/lukechendev/mosquitto-qnx/blob/master/mosquitto.zip
 
+To build:
+```
+source ~/qnx700/qnxsdp-env.sh
+make
+```
+
 
 ## Links
 
